@@ -44,25 +44,71 @@ public class StudentService implements StudentServiceInter {
 
   @Override
   public ResponseDto getStudentById(Long id) {
-    // TODO Auto-generated method stub
-    return null;
+    try {
+      StudentModel studentModel = studentRepository.findById(id).orElse(null);
+      if (studentModel == null) {
+        return Utils.getResponse(HttpStatus.NOT_FOUND, null, false);
+      }
+      StudentDto studentDto = StudentDto.builder()
+          .id(studentModel.getId())
+          .name(studentModel.getSurname())
+          .surname(studentModel.getSurname())
+          .gender(studentModel.getGender())
+          .state(studentModel.getState())
+          .build();
+
+      return Utils.getResponse(HttpStatus.OK, studentDto, true);
+
+    } catch (Exception e) {
+      return Utils.getResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), false);
+    }
   }
 
   @Override
   public ResponseDto createStudent(StudentDto student) {
-    // TODO Auto-generated method stub
-    return null;
+    try {
+      StudentModel studentModel = StudentModel.builder()
+          .name(student.getName())
+          .surname(student.getSurname())
+          .gender(student.getGender())
+          .state(student.getState())
+          .build();
+
+      studentRepository.save(studentModel);
+      student.setId(studentModel.getId());
+      return Utils.getResponse(HttpStatus.CREATED, studentModel, true);
+    } catch (Exception e) {
+      return Utils.getResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), false);
+    }
   }
 
   @Override
   public ResponseDto updateStudent(StudentDto student) {
-    // TODO Auto-generated method stub
-    return null;
+    try {
+      StudentModel studentModel = studentRepository.findById(student.getId()).orElse(null);
+      if (studentModel == null) {
+        return Utils.getResponse(HttpStatus.NOT_FOUND, null, false);
+      }
+      studentModel.setName(student.getName());
+      studentModel.setSurname(student.getSurname());
+      studentModel.setGender(student.getGender());
+      studentRepository.save(studentModel);
+      return Utils.getResponse(HttpStatus.OK, studentModel, true);
+    } catch (Exception e) {
+      return Utils.getResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), false);
+    }
+
   }
 
   @Override
   public ResponseDto deleteStudent(Long id) {
-    // TODO Auto-generated method stub
-    return null;
+    try {
+      StudentModel studentModel = studentRepository.findById(id).orElse(null);
+      studentModel.setState(false);
+      studentRepository.save(studentModel);
+      return Utils.getResponse(HttpStatus.OK, studentModel, true);
+    } catch (Exception e) {
+      return Utils.getResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), false);
+    }
   }
 }
