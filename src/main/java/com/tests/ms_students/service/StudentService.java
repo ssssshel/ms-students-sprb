@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import com.tests.ms_students.dto.ResponseDto;
 import com.tests.ms_students.dto.StudentDto;
@@ -13,6 +14,7 @@ import com.tests.ms_students.repository.StudentRepository;
 import com.tests.ms_students.service.inter.StudentServiceInter;
 import com.tests.ms_students.shared.Utils;
 
+@Service
 public class StudentService implements StudentServiceInter {
 
   @Autowired
@@ -26,9 +28,9 @@ public class StudentService implements StudentServiceInter {
         return Utils.getResponse(HttpStatus.NOT_FOUND, studentsList, false);
       }
 
-      List<StudentDto> studentDto = new ArrayList<StudentDto>();
+      List<StudentDto> studentDtoList = new ArrayList<StudentDto>();
       for (StudentModel studentObject : studentsList) {
-        studentDto.add(StudentDto.builder()
+        studentDtoList.add(StudentDto.builder()
             .id(studentObject.getId())
             .name(studentObject.getName())
             .surname(studentObject.getSurname())
@@ -36,7 +38,7 @@ public class StudentService implements StudentServiceInter {
             .state(studentObject.getState())
             .build());
       }
-      return Utils.getResponse(HttpStatus.OK, studentDto, true);
+      return Utils.getResponse(HttpStatus.OK, studentDtoList, true);
     } catch (Exception e) {
       return Utils.getResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), false);
     }
@@ -85,6 +87,7 @@ public class StudentService implements StudentServiceInter {
   @Override
   public ResponseDto updateStudent(StudentDto student) {
     try {
+      System.out.println(student.getId());
       StudentModel studentModel = studentRepository.findById(student.getId()).orElse(null);
       if (studentModel == null) {
         return Utils.getResponse(HttpStatus.NOT_FOUND, null, false);
