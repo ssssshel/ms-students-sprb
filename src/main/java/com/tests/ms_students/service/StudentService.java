@@ -22,6 +22,7 @@ public class StudentService implements StudentServiceInter {
 
   @Override
   public ResponseDto getAllStudents() {
+    System.out.println("getAllStudents");
     try {
       List<StudentModel> studentsList = studentRepository.findAll();
       if (studentsList.isEmpty()) {
