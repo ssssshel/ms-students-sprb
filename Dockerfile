@@ -1,9 +1,9 @@
-FROM openjdk:17
+FROM openjdk:17-jdk-slim
 
 WORKDIR /app
 
-COPY target/ms_students_sprb.jar app.jar
+COPY target/app.jar /app/app.jar
 
-EXPOSE 8080
+EXPOSE 8082
 
 CMD ["java", "-jar", "app.jar"]
